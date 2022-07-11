@@ -10,6 +10,7 @@ const allQuestions = async (req, res, next) => {
     const con = await mysql.createConnection(mysqlConfig);
     const sql = `
     SELECT * FROM questions
+    WHERE archived = false
     `;
     const [data] = await con.query(sql);
     await con.end();
@@ -29,7 +30,7 @@ const oneQuestion = async (req, res, next) => {
     const sql = `
     SELECT *
     FROM questions
-    WHERE id = ?
+    WHERE archived = false AND id = ?
     `;
     const [data] = await con.query(sql, questionId);
     console.log(data);
