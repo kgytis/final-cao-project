@@ -48,7 +48,7 @@ const newQuestion = async (req, res, next) => {
   try {
     const timestamp = new Date().toLocaleDateString("LT");
     const ID = uuid();
-    const userID = req.body.user_id; // after JWT - change to get an user_id from JWT token
+    const userID = req.user[0].id; // extracted from JWT
     const { title, questionText } = req.body;
     const con = await mysql.createConnection(mysqlConfig);
     const sql = `
@@ -77,7 +77,7 @@ const newQuestion = async (req, res, next) => {
 // @access Private
 const updateQuestion = async (req, res, next) => {
   try {
-    const userID = req.body.user_id; // after JWT - change to get an user_id from JWT token
+    const userID = req.user[0].id; // extracted from JWT
     const questionId = req.params.id;
     const timestamp = new Date().toLocaleDateString("LT");
     const { title, questionText } = req.body;
@@ -146,7 +146,7 @@ const updateQuestion = async (req, res, next) => {
 // @access Private
 const deleteQuestion = async (req, res, next) => {
   try {
-    const userID = req.body.user_id; // after JWT - change to get an user_id from JWT token
+    const userID = req.user[0].id; // extracted from JWT
     const questionId = req.params.id;
     const con = await mysql.createConnection(mysqlConfig);
     const sql = `
