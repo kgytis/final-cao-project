@@ -1,10 +1,10 @@
 import {
   AppBar,
   Toolbar,
-  Typography,
+  // Typography,
   styled,
   InputBase,
-  Avatar,
+  // Avatar,
   Box,
   List,
   ListItem,
@@ -14,10 +14,13 @@ import {
   Switch,
   Drawer,
   IconButton,
+  Button,
+  Stack,
 } from "@mui/material";
 import { Home, ModeNight, Reorder } from "@mui/icons-material";
 import { useState } from "react";
 import * as React from "react";
+import { Link } from "react-router-dom";
 
 const StyledToolbar = styled(Toolbar)({
   display: "flex",
@@ -121,24 +124,38 @@ const NavBar = ({ ...props }) => {
           </Drawer>
         </React.Fragment>
         <Box>
-          <img
-            src="https://seeklogo.com/images/F/Forum-logo-6948026C4B-seeklogo.com.png"
-            alt="logo"
-            style={{ height: "50px", width: "auto" }}
-          />
+          <Link to="/home">
+            <img
+              src="https://seeklogo.com/images/F/Forum-logo-6948026C4B-seeklogo.com.png"
+              alt="logo"
+              style={{ height: "50px", width: "auto" }}
+            />
+          </Link>
         </Box>
         <Search sx={{ display: { xs: "none", md: "block" } }}>
           <InputBase placeholder="Search..." />
           {/* Add Autocomplete from MUI. Leis autocomplete'int paieska is jau turimu klausimu, gal visai nieko */}
         </Search>
-        <Icons>
+        <Stack direction="row" spacing={2}>
+          <Link to="/login">
+            <Button variant="outlined" style={{ color: "white" }}>
+              Log in
+            </Button>
+          </Link>
+          <Link to="/register">
+            <Button variant="primary" style={{ color: "white" }}>
+              Sign in
+            </Button>
+          </Link>
+        </Stack>
+        {/* <Icons>
           <Typography variant="p">You are logged in as : Johnny</Typography>
           <Avatar sx={{ width: "30", height: "30" }} />
         </Icons>
         <UserBox>
           <Avatar sx={{ width: "30", height: "30" }} />
           <Typography variant="span">John</Typography>
-        </UserBox>
+        </UserBox> */}
       </StyledToolbar>
     </AppBar>
   );
