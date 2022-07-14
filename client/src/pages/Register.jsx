@@ -15,6 +15,11 @@ import {
   RemoveRedEye,
 } from "@mui/icons-material";
 import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { register, reset } from "../features/auth/authSlice";
+import Spinner from "../components/Spinner";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -24,17 +29,50 @@ const Register = () => {
     passwordRepeat: "",
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setFormData({
-      username: e.target.elements.username.value,
-      email: e.target.elements.email.value,
-      password: e.target.elements.password.value,
-      passwordRepeat: e.target.elements.passwordRepeat.value,
-    });
-    console.log("submitted");
-    console.log(formData);
+  const { username, email, password, passwordRepeat } = formData;
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(message);
+    }
+    if (isSuccess || user) {
+      navigate("/");
+    }
+
+    dispatch(reset());
+  }, [user, isError, isSuccess, message, navigate, dispatch]);
+
+  const onChange = (e) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value,
+    }));
   };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    if (password !== passwordRepeat) {
+      toast.error("Passwords do not match.");
+    } else {
+      const userData = {
+        username,
+        email,
+        password,
+      };
+
+      dispatch(register(userData));
+    }
+  };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
     <Box
       display="flex"
@@ -55,7 +93,7 @@ const Register = () => {
             Register
           </Typography>
         </Box>
-        <form onSubmit={(e) => handleSubmit(e)}>
+        <form onSubmit={onSubmit}>
           <FormGroup>
             <FormControl variant="standard" size="medium" margin="normal">
               <InputLabel>Username</InputLabel>
@@ -67,6 +105,9 @@ const Register = () => {
                 }
                 name="username"
                 type="text"
+                id="username"
+                value={username}
+                onChange={onChange}
               />
             </FormControl>
             <FormControl variant="standard" margin="normal">
@@ -79,6 +120,9 @@ const Register = () => {
                 }
                 name="email"
                 type="email"
+                id="email"
+                value={email}
+                onChange={onChange}
               />
             </FormControl>
             <FormControl variant="standard" margin="normal">
@@ -91,6 +135,9 @@ const Register = () => {
                 }
                 type="password"
                 name="password"
+                id="password"
+                value={password}
+                onChange={onChange}
               />
             </FormControl>
             <FormControl variant="standard" margin="normal">
@@ -103,6 +150,9 @@ const Register = () => {
                 }
                 type="password"
                 name="passwordRepeat"
+                id="passwordRepeat"
+                value={passwordRepeat}
+                onChange={onChange}
               />
             </FormControl>
             <Button variant="contained" type="submit">

@@ -1,10 +1,10 @@
 import {
   AppBar,
   Toolbar,
-  // Typography,
+  Typography,
   styled,
   InputBase,
-  // Avatar,
+  Avatar,
   Box,
   List,
   ListItem,
@@ -20,7 +20,10 @@ import {
 import { Home, ModeNight, Reorder } from "@mui/icons-material";
 import { useState } from "react";
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+// Redux imports
+import { useSelector, useDispatch } from "react-redux";
+import { logout, reset } from "../features/auth/authSlice";
 
 const StyledToolbar = styled(Toolbar)({
   display: "flex",
@@ -54,10 +57,19 @@ const UserBox = styled(Box)(({ theme }) => ({
 }));
 
 const NavBar = ({ ...props }) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
   const { setMode, mode } = props;
   const [drawerState, setDrawerState] = useState({
     left: false,
   });
+
+  const onLogout = () => {
+    dispatch(logout());
+    dispatch(reset());
+    navigate("/");
+  };
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
@@ -80,12 +92,14 @@ const NavBar = ({ ...props }) => {
       <Box position="fixed">
         <List>
           <ListItem disablePadding>
-            <ListItemButton component="a" href="#home">
-              <ListItemIcon>
-                <Home />
-              </ListItemIcon>
-              <ListItemText primary="Homepage" />
-            </ListItemButton>
+            <Link to="/">
+              <ListItemButton>
+                <ListItemIcon>
+                  <Home />
+                </ListItemIcon>
+                <ListItemText primary="Homepage" />
+              </ListItemButton>
+            </Link>
           </ListItem>
           <ListItem disablePadding>
             <ListItemButton>
@@ -137,25 +151,38 @@ const NavBar = ({ ...props }) => {
           {/* Add Autocomplete from MUI. Leis autocomplete'int paieska is jau turimu klausimu, gal visai nieko */}
         </Search>
         <Stack direction="row" spacing={2}>
-          <Link to="/login">
-            <Button variant="outlined" style={{ color: "white" }}>
-              Log in
-            </Button>
-          </Link>
-          <Link to="/register">
-            <Button variant="primary" style={{ color: "white" }}>
-              Sign in
-            </Button>
-          </Link>
+          {user && (
+            <>
+              <Icons>
+                <Typography variant="p">
+                  You are logged in as : Johnny
+                </Typography>
+                <Avatar sx={{ width: "30", height: "30" }} />
+              </Icons>
+              <UserBox>
+                <Avatar sx={{ width: "30", height: "30" }} />
+                <Typography variant="span">John</Typography>
+              </UserBox>
+              <Button variant="contained" color="primary" onClick={onLogout}>
+                Logout
+              </Button>
+            </>
+          )}
+          {!user && (
+            <>
+              <Link to="/login">
+                <Button variant="outlined" style={{ color: "white" }}>
+                  Log in
+                </Button>
+              </Link>
+              <Link to="/register">
+                <Button variant="primary" style={{ color: "white" }}>
+                  Sign in
+                </Button>
+              </Link>
+            </>
+          )}
         </Stack>
-        {/* <Icons>
-          <Typography variant="p">You are logged in as : Johnny</Typography>
-          <Avatar sx={{ width: "30", height: "30" }} />
-        </Icons>
-        <UserBox>
-          <Avatar sx={{ width: "30", height: "30" }} />
-          <Typography variant="span">John</Typography>
-        </UserBox> */}
       </StyledToolbar>
     </AppBar>
   );
