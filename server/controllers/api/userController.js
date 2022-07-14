@@ -3,7 +3,6 @@ import { v4 as uuid } from "uuid";
 import bcrypt from "bcryptjs"; // for password hashing
 import mysql from "mysql2/promise";
 import mysqlConfig from "../../dbConfig.js";
-import { time } from "console";
 
 // @desc Registration for new user
 // @route POST /api/user/register
@@ -37,9 +36,11 @@ const registerUser = async (req, res, next) => {
 
     // Validators to check whether username or email exists in database
     if (data.length !== 0) {
+      res.status(401);
       throw new Error("Such username already exists");
     }
     if (data2.length !== 0) {
+      res.status(401);
       throw new Error("Such email already exists");
     }
 
@@ -87,12 +88,14 @@ const loginUser = async (req, res, next) => {
     await con.end();
     // Checks whether correct username was provided, if not, returns empty array, throws an error
     if (data.length === 0) {
+      res.status(400);
       throw new Error("Incorrect username or password.");
     }
     // if correct username, then password hashing can take place
     const hashedPassword = await bcrypt.compare(password, data[0].password);
     // Checks whether provided password ir correct, for security measures returned same error message as above
     if (!hashedPassword) {
+      res.status(400);
       throw new Error("Incorrect username or password.");
     } else if (data[0].username && hashedPassword) {
       res.json({
