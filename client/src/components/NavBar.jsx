@@ -1,76 +1,45 @@
+// MUI related imports
 import {
   AppBar,
-  Toolbar,
   Typography,
-  styled,
   InputBase,
   Avatar,
   Box,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Switch,
-  Drawer,
   IconButton,
   Button,
   Stack,
 } from "@mui/material";
-import { Home, ModeNight, Reorder } from "@mui/icons-material";
+import { Reorder } from "@mui/icons-material";
+// -----------------------------------------------------------
+// React imports
 import { useState } from "react";
 import * as React from "react";
+// -----------------------------------------------------------
+// React router imports
 import { Link, useNavigate } from "react-router-dom";
+// -----------------------------------------------------------
 // Redux imports
 import { useSelector, useDispatch } from "react-redux";
 import { logout, reset } from "../features/auth/authSlice";
+// -----------------------------------------------------------
+// Styled components imports
+import {
+  StyledToolbar,
+  Search,
+  Icons,
+  UserBox,
+} from "./styledComponents/NavBarStyled";
+import StyledDrawer from "./styledComponents/StyledDrawer";
 
-const StyledToolbar = styled(Toolbar)({
-  display: "flex",
-  justifyContent: "space-between",
-});
-
-const Search = styled("div")(({ theme }) => ({
-  backgroundColor: "white",
-  justifyContent: "space-between",
-  padding: "0 10px",
-  borderRadius: theme.shape.borderRadius,
-  width: "40%",
-}));
-
-const Icons = styled(Box)(({ theme }) => ({
-  display: "none",
-  gap: "20px",
-  alignItems: "center",
-  [theme.breakpoints.up("md")]: {
-    display: "flex",
-  },
-}));
-
-const UserBox = styled(Box)(({ theme }) => ({
-  display: "flex",
-  gap: "10px",
-  alignItems: "center",
-  [theme.breakpoints.up("md")]: {
-    display: "none",
-  },
-}));
+// -----------------------------------------------------------
 
 const NavBar = ({ ...props }) => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  // For MUI styling and dark/light mode
   const { setMode, mode } = props;
+  // States for drawer (mobile version)
   const [drawerState, setDrawerState] = useState({
     left: false,
   });
-
-  const onLogout = () => {
-    dispatch(logout());
-    dispatch(reset());
-    navigate("/");
-  };
-
   const toggleDrawer = (anchor, open) => (event) => {
     if (
       event.type === "keydown" &&
@@ -81,40 +50,19 @@ const NavBar = ({ ...props }) => {
 
     setDrawerState({ ...drawerState, [anchor]: open });
   };
+  // -----------------------------------------------------------
 
-  const list = (anchor) => (
-    <Box
-      sx={{ width: anchor === "top" || anchor === "bottom" ? "auto" : 250 }}
-      role="presentation"
-      onClick={toggleDrawer(anchor, false)}
-      onKeyDown={toggleDrawer(anchor, false)}
-    >
-      <Box position="fixed">
-        <List>
-          <ListItem disablePadding>
-            <Link to="/">
-              <ListItemButton>
-                <ListItemIcon>
-                  <Home />
-                </ListItemIcon>
-                <ListItemText primary="Homepage" />
-              </ListItemButton>
-            </Link>
-          </ListItem>
-          <ListItem disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <ModeNight />
-              </ListItemIcon>
-              <Switch
-                onChange={() => setMode(mode === "light" ? "dark" : "light")}
-              ></Switch>
-            </ListItemButton>
-          </ListItem>
-        </List>
-      </Box>
-    </Box>
-  );
+  // Redux part
+  const navigate = useNavigate(); // Needed to navigate after login or sign-up
+  const dispatch = useDispatch(); // for state change triggering
+  const { user } = useSelector((state) => state.auth);
+
+  const onLogout = () => {
+    dispatch(logout());
+    dispatch(reset());
+    navigate("/");
+  };
+
   return (
     <AppBar position="sticky">
       <StyledToolbar>
@@ -129,13 +77,12 @@ const NavBar = ({ ...props }) => {
               sx={{ width: 40, height: 40 }}
             />
           </IconButton>
-          <Drawer
-            anchor="left"
-            open={drawerState["left"]}
-            onClose={toggleDrawer("left", false)}
-          >
-            {list("left")}
-          </Drawer>
+          <StyledDrawer
+            mode={mode}
+            setMode={setMode}
+            drawerState={drawerState}
+            setDrawerState={setDrawerState}
+          />
         </React.Fragment>
         <Box>
           <Link to="/home">
@@ -170,16 +117,13 @@ const NavBar = ({ ...props }) => {
           )}
           {!user && (
             <>
-              <Link to="/login">
-                <Button variant="outlined" style={{ color: "white" }}>
-                  Log in
-                </Button>
-              </Link>
-              <Link to="/register">
-                <Button variant="primary" style={{ color: "white" }}>
-                  Sign in
-                </Button>
-              </Link>
+              <Button variant="contained" onClick={() => navigate("/login")}>
+                Log in
+              </Button>
+
+              <Button variant="contained" onClick={() => navigate("/register")}>
+                Sign in
+              </Button>
             </>
           )}
         </Stack>
