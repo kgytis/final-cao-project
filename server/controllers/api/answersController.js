@@ -10,16 +10,17 @@ const allAnswers = async (req, res, next) => {
     const questionID = req.params.id;
     const con = await mysql.createConnection(mysqlConfig);
     const sql = `
-    SELECT * 
-    FROM answers
-    WHERE question_id = ?
+    
+    SELECT answers.*, users.email, users.username FROM answers
+    INNER JOIN users ON answers.user_id = users.id
+    WHERE question_id =?
     `;
     const [data] = await con.query(sql, questionID);
     await con.end();
     if (data.length === 0) {
-      res
-        .status(200)
-        .json({ msg: "No answers have been published to this question yet." });
+      res.status(200).json({
+        message: "No answers have been published to this question yet.",
+      });
     } else {
       res.status(200).json(data);
     }
@@ -48,7 +49,7 @@ const newAnswer = async (req, res, next) => {
       throw new Error("Please add an answer.");
     } else {
       await con.query(sql, [ID, userID, questionID, answerText, timestamp]);
-      res.status(200).json({ msg: "Successfully posted an answer!" });
+      res.status(200).json({ message: "Successfully posted an answer!" });
     }
     await con.end();
   } catch (err) {
@@ -64,7 +65,9 @@ const updateAnswer = async (req, res, next) => {
     const userID = req.user[0].id; // extracted from JWT
     const answerId = req.params.id;
     const timestamp = new Date().toLocaleDateString("LT");
-    const { answerText } = req.body;
+    const answerText = req.body.answerText;
+    console.log(`User ID ` + userID);
+    console.log(`Answer ID ` + answerId);
     const con = await mysql.createConnection(mysqlConfig);
     let sql = ``;
     let data = ``;
@@ -88,7 +91,7 @@ const updateAnswer = async (req, res, next) => {
       await res.status(400);
       throw new Error("Invalid user for this type of action.");
     } else {
-      await res.status(200).json({ msg: "Succesfully updated answer." });
+      await res.status(200).json({ message: "Succesfully updated answer." });
     }
   } catch (err) {
     next(err);
@@ -113,7 +116,7 @@ const deleteAnswer = async (req, res, next) => {
       await res.status(400);
       throw new Error("Invalid user for this type of action.");
     } else {
-      await res.status(200).json({ msg: "Succesfully deleted question." });
+      await res.status(200).json({ message: "Succesfully deleted answer." });
     }
   } catch (err) {
     next(err);

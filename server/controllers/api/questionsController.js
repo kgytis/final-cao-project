@@ -9,8 +9,9 @@ const allQuestions = async (req, res, next) => {
   try {
     const con = await mysql.createConnection(mysqlConfig);
     const sql = `
-    SELECT * FROM questions
-    WHERE archived = false
+    SELECT questions.*, users.email, users.username FROM questions
+    INNER JOIN users ON questions.user_id = users.id
+    WHERE questions.archived = false
     `;
     const [data] = await con.query(sql);
     await con.end();
@@ -28,9 +29,10 @@ const oneQuestion = async (req, res, next) => {
     const questionId = req.params.id;
     const con = await mysql.createConnection(mysqlConfig);
     const sql = `
-    SELECT *
+    SELECT questions.*, users.username, users.email
     FROM questions
-    WHERE archived = false AND id = ?
+    INNER JOIN users ON questions.user_id = users.id
+    WHERE questions.archived = false AND questions.id = ?
     `;
     const [data] = await con.query(sql, questionId);
     console.log(data);
@@ -49,23 +51,22 @@ const newQuestion = async (req, res, next) => {
     const timestamp = new Date().toLocaleDateString("LT");
     const ID = uuid();
     const userID = req.user[0].id; // extracted from JWT
-    const { title, questionText } = req.body;
+    const { title, description } = req.body;
     const con = await mysql.createConnection(mysqlConfig);
     const sql = `
     INSERT INTO questions (id, user_id, title, question_text, timestamp)
     VALUES (?, ?, ?, ?, ?)
     `;
-    if (!req.body.questionText) {
+    if (!description) {
       res.status(400);
       throw new Error("Please add a question.");
-    } else if (!req.body.title) {
+    } else if (!title) {
       res.status(400);
       throw new Error("Please add a question title.");
     } else {
-      await con.query(sql, [ID, userID, title, questionText, timestamp]);
-      res.status(200).json({ msg: "Successfully added a new question!" });
+      await con.query(sql, [ID, userID, title, description, timestamp]);
+      res.status(200).json({ message: "Successfully added a new question!" });
     }
-
     await con.end();
   } catch (err) {
     next(err);
@@ -103,13 +104,7 @@ const updateQuestion = async (req, res, next) => {
       SET title = ?, edited = true, edit_timestamp = ?
       WHERE id = ? AND user_id = ?
       `;
-      [data] = await con.query(sql, [
-        title,
-        questionText,
-        timestamp,
-        questionId,
-        userID,
-      ]);
+      [data] = await con.query(sql, [title, timestamp, questionId, userID]);
     } else if (req.body.questionText) {
       sql = `
       UPDATE questions
@@ -117,7 +112,6 @@ const updateQuestion = async (req, res, next) => {
       WHERE id = ? AND user_id = ?
       `;
       [data] = await con.query(sql, [
-        title,
         questionText,
         timestamp,
         questionId,
@@ -134,7 +128,7 @@ const updateQuestion = async (req, res, next) => {
       await res.status(400);
       throw new Error("Invalid user for this type of action.");
     } else {
-      await res.status(200).json({ msg: "Succesfully updated question." });
+      await res.status(200).json({ message: "Succesfully updated question." });
     }
   } catch (err) {
     next(err);
@@ -160,7 +154,7 @@ const deleteQuestion = async (req, res, next) => {
       await res.status(400);
       throw new Error("Invalid user for this type of action.");
     } else {
-      await res.status(200).json({ msg: "Succesfully deleted question." });
+      await res.status(200).json({ message: "Succesfully deleted question." });
     }
   } catch (err) {
     next(err);
