@@ -1,8 +1,8 @@
 // Only for HTTP request to send and store to local storage
 import axios from "axios";
 
-const API_URL_REGISTER = "/api/users/register";
-const API_URL_LOGIN = "/api/users/login";
+const API_URL_REGISTER = "http://localhost:5000/api/users/register";
+const API_URL_LOGIN = "http://localhost:5000/api/users/login";
 
 // Register user
 const register = async (userData) => {
