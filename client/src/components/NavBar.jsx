@@ -30,6 +30,7 @@ import {
   UserBox,
 } from "./styledComponents/NavBarStyled";
 import StyledDrawer from "./styledComponents/StyledDrawer";
+import { useEffect } from "react";
 
 // -----------------------------------------------------------
 
@@ -52,17 +53,14 @@ const NavBar = ({ ...props }) => {
   };
   // -----------------------------------------------------------
 
-  // Redux part
   const navigate = useNavigate(); // Needed to navigate after login or sign-up
-  const dispatch = useDispatch(); // for state change triggering
-  const { user } = useSelector((state) => state.auth);
-
-  const onLogout = () => {
-    dispatch(logout());
-    dispatch(reset());
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  const onLogout = async () => {
+    localStorage.removeItem("user");
+    setUser(null);
     navigate("/");
   };
-
+  useEffect(() => {}, [user]);
   return (
     <AppBar position="sticky">
       <StyledToolbar>
@@ -85,13 +83,12 @@ const NavBar = ({ ...props }) => {
           />
         </React.Fragment>
         <Box>
-          <Link to="/home">
-            <img
-              src="https://seeklogo.com/images/F/Forum-logo-6948026C4B-seeklogo.com.png"
-              alt="logo"
-              style={{ height: "50px", width: "auto" }}
-            />
-          </Link>
+          <img
+            src="https://seeklogo.com/images/F/Forum-logo-6948026C4B-seeklogo.com.png"
+            alt="logo"
+            style={{ height: "50px", width: "auto" }}
+            onClick={() => navigate("/")}
+          />
         </Box>
         <Search sx={{ display: { xs: "none", md: "block" } }}>
           <InputBase placeholder="Search..." />

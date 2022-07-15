@@ -6,6 +6,7 @@ import FrontPage from "./pages/FrontPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NavBar from "./components/NavBar";
+import Question from "./pages/Question";
 
 function App() {
   const [mode, setMode] = useState("light");
@@ -23,12 +24,9 @@ function App() {
             path="/"
             element={<FrontPage mode={mode} setMode={setMode} />}
           />
-          <Route
-            path="/home"
-            element={<FrontPage mode={mode} setMode={setMode} />}
-          />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/question/:id" element={<Question />} />
         </Routes>
       </Box>
     </ThemeProvider>

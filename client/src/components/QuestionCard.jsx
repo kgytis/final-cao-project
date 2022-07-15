@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import {
   Card,
   CardHeader,
@@ -8,14 +8,20 @@ import {
   IconButton,
   CardActions,
   Radio,
+  Button,
 } from "@mui/material";
 import { MoreVert, ThumbDown, ThumbUp } from "@mui/icons-material";
 import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 
-const QuestionCard = () => {
-  const [selectedValue, setSelectedValue] = useState(null);
+import { Link, Redirect, useNavigate } from "react-router-dom";
+import { QuestionContext } from "./Feed";
 
+const QuestionCard = ({ ...props }) => {
+  const question = useContext(QuestionContext);
+  const { data, userData } = props;
+  const [selectedValue, setSelectedValue] = useState(null);
+  const navigate = useNavigate();
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
   };
@@ -27,12 +33,28 @@ const QuestionCard = () => {
     name: "color-radio-button-demo",
     inputProps: { "aria-label": item },
   });
+
+  // Kol kas undefined gale atsiranda ten, kur klausimas trumpesnis nei 5 zodziai, jei kas pataisyti logika
+  // const stringSplitter = (string) => {
+  //   const stringArray = string.split(" ");
+  //   const numberArray = [];
+  //   for (let i = 0; i < 5; i++) {
+  //     numberArray.push(i);
+  //   }
+  //   const newString = numberArray.map((number, index) => {
+  //     return stringArray[index];
+  //   });
+  //   console.log(newString);
+
+  //   return newString;
+  // };
+  // stringSplitter(data.qeustion_text);
   return (
     <Card sx={{ margin: 5 }}>
       <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: "red" }} aria-label="recipe">
-            R
+          <Avatar sx={{ bgcolor: "red" }} aria-label="question">
+            {data.username.slice(0, 1).toUpperCase()}
           </Avatar>
         }
         action={
@@ -40,15 +62,17 @@ const QuestionCard = () => {
             <MoreVert />
           </IconButton>
         }
-        title="Johnny Bravo"
-        subheader="September 14, 2016 (timeStamp)"
+        title={data.username}
+        subheader={data.timestamp.slice(0, 10)}
       />
       <CardContent>
         <Typography variant="body2" color="text.secondary">
-          This impressive paella is a perfect party dish and a fun meal to cook
-          together with your guests. Add 1 cup of frozen peas along with the
-          mussels, if you like.
+          {`${data.question_text.slice(0, 20)}...`}
         </Typography>
+        <Link to={`/question/${question.id}`}> Read More</Link>
+        {/* <Button onClick={() => navigate(`/question/${data.id}`)}>
+          Read more
+        </Button> */}
       </CardContent>
       <CardActions disableSpacing>
         <IconButton aria-label="like" id="like-checkbox">

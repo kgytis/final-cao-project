@@ -15,62 +15,60 @@ import {
   RemoveRedEye,
 } from "@mui/icons-material";
 import { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { register, reset } from "../features/auth/authSlice";
+
 import Spinner from "../components/Spinner";
+import axios from "axios";
 
 const Register = () => {
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    passwordRepeat: "",
-  });
+  const [user, setUser] = useState(null);
+  const [isPending, setIsPending] = useState(null);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
 
-  const { username, email, password, passwordRepeat } = formData;
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-
-  const { user, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.auth
-  );
-
-  useEffect(() => {
-    if (isError) {
-      toast.error(message);
-    }
-    if (isSuccess || user) {
-      navigate("/");
-    }
-
-    dispatch(reset());
-  }, [user, isError, isSuccess, message, navigate, dispatch]);
-
-  const onChange = (e) => {
-    setFormData((prevState) => ({
-      ...prevState,
-      [e.target.name]: e.target.value,
-    }));
-  };
 
   const onSubmit = (e) => {
     e.preventDefault();
-    if (password !== passwordRepeat) {
+    if (
+      e.target.elements.password.value !==
+      e.target.elements.passwordRepeat.value
+    ) {
       toast.error("Passwords do not match.");
     } else {
-      const userData = {
-        username,
-        email,
-        password,
-      };
-
-      dispatch(register(userData));
+      axios
+        .post("http://localhost:5000/api/users/register", {
+          username: e.target.elements.username.value,
+          email: e.target.elements.email.value,
+          password: e.target.elements.password.value,
+        })
+        .then((response) => {
+          localStorage.setItem("user", JSON.stringify(response.data));
+          return response.data;
+        })
+        .then((receivedResponse) => {
+          setUser(receivedResponse);
+          setIsPending(false);
+          setError(null);
+          setSuccess(true);
+          navigate("/");
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsPending(false);
+          const message =
+            (err.response && err.response.data && err.response.data.message) ||
+            err.message ||
+            err.toString();
+          setError(message);
+          toast.error(error);
+        });
     }
   };
 
-  if (isLoading) {
+  if (isPending) {
     return <Spinner />;
   }
   return (
@@ -106,8 +104,6 @@ const Register = () => {
                 name="username"
                 type="text"
                 id="username"
-                value={username}
-                onChange={onChange}
               />
             </FormControl>
             <FormControl variant="standard" margin="normal">
@@ -121,8 +117,6 @@ const Register = () => {
                 name="email"
                 type="email"
                 id="email"
-                value={email}
-                onChange={onChange}
               />
             </FormControl>
             <FormControl variant="standard" margin="normal">
@@ -136,8 +130,6 @@ const Register = () => {
                 type="password"
                 name="password"
                 id="password"
-                value={password}
-                onChange={onChange}
               />
             </FormControl>
             <FormControl variant="standard" margin="normal">
@@ -151,8 +143,6 @@ const Register = () => {
                 type="password"
                 name="passwordRepeat"
                 id="passwordRepeat"
-                value={passwordRepeat}
-                onChange={onChange}
               />
             </FormControl>
             <Button variant="contained" type="submit">
