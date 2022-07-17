@@ -30,7 +30,7 @@ const useFetch = (URL) => {
         toast.error(error);
       });
   }, [URL]);
-  return { data, isPending, error };
+  return { data, isPending, error, setData, setIsPending, setError };
 };
 
 export default useFetch;
