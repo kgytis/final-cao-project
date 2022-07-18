@@ -14,7 +14,8 @@ import {
   Person,
   RemoveRedEye,
 } from "@mui/icons-material";
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import NavBar from "../components/NavBar";
 
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -22,7 +23,7 @@ import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 import axios from "axios";
 
-const Register = () => {
+const Register = ({ mode, setMode }) => {
   const [user, setUser] = useState(null);
   const [isPending, setIsPending] = useState(null);
   const [error, setError] = useState(null);
@@ -72,86 +73,90 @@ const Register = () => {
     return <Spinner />;
   }
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      sx={{ height: 600 }}
-    >
+    <>
+      <NavBar setMode={setMode} mode={mode} />
+
       <Box
         display="flex"
         justifyContent="center"
-        flexDirection="column"
         alignItems="center"
-        sx={{ width: "50%" }}
+        sx={{ height: 600 }}
       >
-        <Box display="flex" justifyContent="center" alignItems="center">
-          <Person fontSize="large" />
-          <Typography variante="h1" fontSize={50}>
-            Register
-          </Typography>
+        <Box
+          display="flex"
+          justifyContent="center"
+          flexDirection="column"
+          alignItems="center"
+          sx={{ width: "50%" }}
+        >
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <Person fontSize="large" />
+            <Typography variante="h1" fontSize={50}>
+              Register
+            </Typography>
+          </Box>
+          <form onSubmit={onSubmit}>
+            <FormGroup>
+              <FormControl variant="standard" size="medium" margin="normal">
+                <InputLabel>Username</InputLabel>
+                <Input
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <AccountCircle />
+                    </InputAdornment>
+                  }
+                  name="username"
+                  type="text"
+                  id="username"
+                />
+              </FormControl>
+              <FormControl variant="standard" margin="normal">
+                <InputLabel>Email</InputLabel>
+                <Input
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <Email />
+                    </InputAdornment>
+                  }
+                  name="email"
+                  type="email"
+                  id="email"
+                />
+              </FormControl>
+              <FormControl variant="standard" margin="normal">
+                <InputLabel>Password</InputLabel>
+                <Input
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <RemoveRedEye />
+                    </InputAdornment>
+                  }
+                  type="password"
+                  name="password"
+                  id="password"
+                />
+              </FormControl>
+              <FormControl variant="standard" margin="normal">
+                <InputLabel>Password Repeat</InputLabel>
+                <Input
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <RemoveRedEye />
+                    </InputAdornment>
+                  }
+                  type="password"
+                  name="passwordRepeat"
+                  id="passwordRepeat"
+                />
+              </FormControl>
+              <Button variant="contained" type="submit">
+                Sign up
+              </Button>
+            </FormGroup>
+          </form>
         </Box>
-        <form onSubmit={onSubmit}>
-          <FormGroup>
-            <FormControl variant="standard" size="medium" margin="normal">
-              <InputLabel>Username</InputLabel>
-              <Input
-                startAdornment={
-                  <InputAdornment position="start">
-                    <AccountCircle />
-                  </InputAdornment>
-                }
-                name="username"
-                type="text"
-                id="username"
-              />
-            </FormControl>
-            <FormControl variant="standard" margin="normal">
-              <InputLabel>Email</InputLabel>
-              <Input
-                startAdornment={
-                  <InputAdornment position="start">
-                    <Email />
-                  </InputAdornment>
-                }
-                name="email"
-                type="email"
-                id="email"
-              />
-            </FormControl>
-            <FormControl variant="standard" margin="normal">
-              <InputLabel>Password</InputLabel>
-              <Input
-                startAdornment={
-                  <InputAdornment position="start">
-                    <RemoveRedEye />
-                  </InputAdornment>
-                }
-                type="password"
-                name="password"
-                id="password"
-              />
-            </FormControl>
-            <FormControl variant="standard" margin="normal">
-              <InputLabel>Password Repeat</InputLabel>
-              <Input
-                startAdornment={
-                  <InputAdornment position="start">
-                    <RemoveRedEye />
-                  </InputAdornment>
-                }
-                type="password"
-                name="passwordRepeat"
-                id="passwordRepeat"
-              />
-            </FormControl>
-            <Button variant="contained" type="submit">
-              Sign up
-            </Button>
-          </FormGroup>
-        </form>
       </Box>
-    </Box>
+    </>
   );
 };
 

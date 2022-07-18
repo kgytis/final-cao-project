@@ -1,24 +1,20 @@
-import { Button, TextField } from "@mui/material";
 import { useState, useEffect, createContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import useFetch from "../hooks/fetchHook";
-import axios from "axios";
-import { toast } from "react-toastify";
 
 import QuestionCard from "../components/QuestionPage/QuestionCard/QuestionCard";
 import AnswerCard from "../components/QuestionPage/AnswerCard/AnswerCard";
 import AnswerForm from "../components/QuestionPage/AnswerForm";
+import NavBar from "../components/NavBar";
 // Contexts
 const QuestionContext = createContext();
 
-const Question = () => {
+const Question = ({ mode, setMode }) => {
   // Setup'ing const ---------------------------------------
   const [error, setError] = useState(null);
-  const user = JSON.parse(localStorage.getItem("user"));
   const params = useParams();
   const questionID = params.id;
-  const navigate = useNavigate();
   const baseURL = "http://localhost:5000";
 
   // Get a question----------------------------------------
@@ -26,6 +22,7 @@ const Question = () => {
     data: question,
     isPending: questionPending,
     error: questionError,
+    forceUpdate: questionForceUpdate,
   } = useFetch(`${baseURL}/api/questions/${questionID}`);
   // ------------------------------------------------------
   // Get all answers---------------------------------------
@@ -33,44 +30,13 @@ const Question = () => {
     data: answers,
     isPending: answerPending,
     error: answerError,
+    forceUpdate: answerForceUpdate,
   } = useFetch(`${baseURL}/api/questions/${questionID}/answers`);
   // --------------------------------------------------------
-  // Answer Posting ----------------------------------------
-  const postAnswer = (e) => {
-    e.preventDefault();
-    axios
-      .post(
-        `${baseURL}/api/questions/${questionID}/answers`,
-        {
-          answerText: e.target.elements.answerText.value,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      )
-      .then((response) => {
-        toast.success(response.data.message);
-        setError(null);
-        navigate(`/question/${questionID}`);
-      })
-      .catch((err) => {
-        console.log(err);
-        const message =
-          (err.response && err.response.data && err.response.data.message) ||
-          err.message ||
-          err.toString();
-        setError(message);
-        toast.error(error);
-      });
-  };
-  // --------------------------------------------------------
-  // State handling------------------------------------------
-  useEffect(() => {}, [question, questionPending, answers, answerPending]);
   // --------------------------------------------------------
   return (
     <>
+      <NavBar setMode={setMode} mode={mode} />
       <QuestionContext.Provider
         value={{
           question,
@@ -81,12 +47,13 @@ const Question = () => {
           answerError,
           error,
           setError,
+          answerForceUpdate,
         }}
       >
         {(questionPending || answerPending) && <Spinner />}
         {question && answers && (
           <>
-            <QuestionCard />
+            <QuestionCard questionForceUpdate={questionForceUpdate} />
             {answers.message && <div>{answers.message}</div>}
             {!answers.message && (
               <>
@@ -100,7 +67,7 @@ const Question = () => {
                     </>
                   );
                 })}
-                <AnswerForm />
+                <AnswerForm answerForceUpdate={answerForceUpdate} />
               </>
             )}
           </>

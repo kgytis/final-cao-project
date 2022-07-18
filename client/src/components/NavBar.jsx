@@ -16,11 +16,7 @@ import { useState } from "react";
 import * as React from "react";
 // -----------------------------------------------------------
 // React router imports
-import { Link, useNavigate } from "react-router-dom";
-// -----------------------------------------------------------
-// Redux imports
-import { useSelector, useDispatch } from "react-redux";
-import { logout, reset } from "../features/auth/authSlice";
+import { useNavigate } from "react-router-dom";
 // -----------------------------------------------------------
 // Styled components imports
 import {
@@ -54,13 +50,13 @@ const NavBar = ({ ...props }) => {
   // -----------------------------------------------------------
 
   const navigate = useNavigate(); // Needed to navigate after login or sign-up
+
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
   const onLogout = async () => {
     localStorage.removeItem("user");
     setUser(null);
     navigate("/");
   };
-  useEffect(() => {}, [user]);
   return (
     <AppBar position="sticky">
       <StyledToolbar>
@@ -99,13 +95,13 @@ const NavBar = ({ ...props }) => {
             <>
               <Icons>
                 <Typography variant="p">
-                  You are logged in as : Johnny
+                  You are logged in as : {user.username}
                 </Typography>
                 <Avatar sx={{ width: "30", height: "30" }} />
               </Icons>
               <UserBox>
                 <Avatar sx={{ width: "30", height: "30" }} />
-                <Typography variant="span">John</Typography>
+                <Typography variant="span">{user.username}</Typography>
               </UserBox>
               <Button variant="contained" color="primary" onClick={onLogout}>
                 Logout

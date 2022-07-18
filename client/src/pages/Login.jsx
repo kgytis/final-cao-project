@@ -14,10 +14,10 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
+import NavBar from "../components/NavBar";
 import Spinner from "../components/Spinner";
 
-const Login = () => {
+const Login = ({ mode, setMode }) => {
   const navigate = useNavigate();
   const [user, setUser] = useState(null);
   const [isPending, setIsPending] = useState(null);
@@ -60,60 +60,63 @@ const Login = () => {
     navigate("/");
   }
   return (
-    <Box
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      sx={{ height: 600 }}
-    >
+    <>
+      <NavBar setMode={setMode} mode={mode} />
       <Box
         display="flex"
         justifyContent="center"
-        flexDirection="column"
         alignItems="center"
-        sx={{ width: "50%" }}
+        sx={{ height: 600 }}
       >
-        <Box display="flex" justifyContent="center" alignItems="center">
-          <LoginIcon fontSize="large" />
-          <Typography variante="h1" fontSize={50}>
-            Login
-          </Typography>
+        <Box
+          display="flex"
+          justifyContent="center"
+          flexDirection="column"
+          alignItems="center"
+          sx={{ width: "50%" }}
+        >
+          <Box display="flex" justifyContent="center" alignItems="center">
+            <LoginIcon fontSize="large" />
+            <Typography variante="h1" fontSize={50}>
+              Login
+            </Typography>
+          </Box>
+          <form onSubmit={onSubmit}>
+            <FormGroup>
+              <FormControl variant="standard" size="medium" margin="normal">
+                <InputLabel>Username</InputLabel>
+                <Input
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <AccountCircle />
+                    </InputAdornment>
+                  }
+                  name="username"
+                  type="text"
+                  id="username"
+                />
+              </FormControl>
+              <FormControl variant="standard" margin="normal">
+                <InputLabel>Password</InputLabel>
+                <Input
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <RemoveRedEye />
+                    </InputAdornment>
+                  }
+                  type="password"
+                  name="password"
+                  id="password"
+                />
+              </FormControl>
+              <Button variant="contained" type="submit">
+                Login in
+              </Button>
+            </FormGroup>
+          </form>
         </Box>
-        <form onSubmit={onSubmit}>
-          <FormGroup>
-            <FormControl variant="standard" size="medium" margin="normal">
-              <InputLabel>Username</InputLabel>
-              <Input
-                startAdornment={
-                  <InputAdornment position="start">
-                    <AccountCircle />
-                  </InputAdornment>
-                }
-                name="username"
-                type="text"
-                id="username"
-              />
-            </FormControl>
-            <FormControl variant="standard" margin="normal">
-              <InputLabel>Password</InputLabel>
-              <Input
-                startAdornment={
-                  <InputAdornment position="start">
-                    <RemoveRedEye />
-                  </InputAdornment>
-                }
-                type="password"
-                name="password"
-                id="password"
-              />
-            </FormControl>
-            <Button variant="contained" type="submit">
-              Login in
-            </Button>
-          </FormGroup>
-        </form>
       </Box>
-    </Box>
+    </>
   );
 };
 
