@@ -20,8 +20,9 @@ import { toast } from "react-toastify";
 
 import Spinner from "../components/Spinner";
 import axios from "axios";
+import { useReducer } from "react";
 
-const Add = () => {
+const Add = ({ setFetchedData, fetchedData, forceUpdate }) => {
   // Dialog box related states -----------------------------
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
@@ -31,7 +32,6 @@ const Add = () => {
     setOpen(false);
   };
   //--------------------------------------------------------
-  // Redux + state handling
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("user"));
 
@@ -60,6 +60,7 @@ const Add = () => {
         setIsPending(false);
         setError(null);
         navigate("/");
+        forceUpdate();
       })
       .catch((err) => {
         console.log(err);

@@ -3,7 +3,7 @@ import QuestionEdit from "./QuestionEdit";
 import { QuestionContext } from "../../../pages/Question";
 import { useContext } from "react";
 
-const PostHeader = () => {
+const PostHeader = ({ questionForceUpdate }) => {
   const { question } = useContext(QuestionContext);
   return (
     <>
@@ -13,7 +13,7 @@ const PostHeader = () => {
             {question[0].username.slice(0, 1).toUpperCase()}
           </Avatar>
         }
-        action={<QuestionEdit />}
+        action={<QuestionEdit questionForceUpdate={questionForceUpdate} />}
         title={question[0].username}
         subheader={question[0].timestamp.slice(0, 10)}
       />

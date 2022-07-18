@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { UserBox } from "../../styledComponents/AddUserBoxStyled";
 import { QuestionContext } from "../../../pages/Question";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -23,40 +23,49 @@ const QuestionEditDialog = ({ ...props }) => {
   const navigate = useNavigate();
   const baseURL = "http://localhost:5000";
   // Dialog open/close functions------------------------------------
-  const { open, setOpen } = props;
+  const { open, setOpen, answerData, modifyingAnswerID } = props;
+
+  const [formData, setFormData] = useState({
+    answerText: "",
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
   const handleClose = () => {
     setOpen(false);
   };
   // --------------------------------------------------------
-  const { setError, error } = useContext(QuestionContext);
+  const { setError, error, answerForceUpdate } = useContext(QuestionContext);
   // Question update'ing ------------------------------------
   const onSubmit = (e) => {
-    // e.preventDefault();
-    // axios
-    //   .patch(
-    //     `${baseURL}/api/answers/${id}`,
-    //     {
-    //       answerText: e.target.elements.answerText.value,
-    //     },
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${user.token}`,
-    //       },
-    //     }
-    //   )
-    //   .then((response) => {
-    //     toast.success(response.data.message);
-    //     navigate(`/question/${questionID}`);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //     const message =
-    //       (err.response && err.response.data && err.response.data.message) ||
-    //       err.message ||
-    //       err.toString();
-    //     setError(message);
-    //     toast.error(error);
-    //   });
+    e.preventDefault();
+    axios
+      .patch(
+        `${baseURL}/api/answers/${modifyingAnswerID}`,
+        {
+          answerText: e.target.elements.answerText.value,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      )
+      .then((response) => {
+        toast.success(response.data.message);
+        navigate(`/question/${questionID}`);
+        answerForceUpdate();
+      })
+      .catch((err) => {
+        console.log(err);
+        const message =
+          (err.response && err.response.data && err.response.data.message) ||
+          err.message ||
+          err.toString();
+        setError(message);
+        toast.error(error);
+      });
   };
   // --------------------------------------------------------
   return (
@@ -78,7 +87,7 @@ const QuestionEditDialog = ({ ...props }) => {
           </DialogContentText>
           <TextField
             sx={{ width: "100%" }}
-            id="description"
+            id="answerText"
             name="answerText"
             label="Update answer"
             type="text"
@@ -86,6 +95,7 @@ const QuestionEditDialog = ({ ...props }) => {
             variant="standard"
             multiline
             rows={8}
+            onChange={handleChange}
           />
         </DialogContent>
         <DialogActions>

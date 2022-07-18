@@ -1,5 +1,5 @@
 // React module imports
-import { useEffect, useState } from "react";
+import { useEffect, useState, useReducer } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
@@ -7,7 +7,7 @@ const useFetch = (URL) => {
   const [data, setData] = useState(null);
   const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState(null);
-
+  const [reducerValue, forceUpdate] = useReducer((x) => x + 1, 0);
   useEffect(() => {
     axios
       .get(URL)
@@ -18,6 +18,7 @@ const useFetch = (URL) => {
         setData(fetchData);
         setIsPending(false);
         setError(null);
+        console.log(`Reducer value is-` + reducerValue);
       })
       .catch((err) => {
         console.log(err);
@@ -29,8 +30,17 @@ const useFetch = (URL) => {
         setError(message);
         toast.error(error);
       });
-  }, [URL]);
-  return { data, isPending, error, setData, setIsPending, setError };
+  }, [URL, reducerValue]);
+  return {
+    data,
+    isPending,
+    error,
+    setData,
+    setIsPending,
+    setError,
+    reducerValue,
+    forceUpdate,
+  };
 };
 
 export default useFetch;

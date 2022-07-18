@@ -6,30 +6,18 @@ import DropDownMenu from "./DropDownMenu";
 import QuestionCard from "./QuestionCard";
 import FilteringMenu from "./FilteringMenu";
 //React + Redux imports
-import { useState, useEffect, createContext } from "react";
-import { useNavigate, useLocation, browserHistory } from "react-router-dom";
-import Spinner from "./Spinner";
-import useFetch from "../hooks/fetchHook";
+import { useState, createContext } from "react";
 
 export const QuestionContext = createContext();
 
-const Feed = () => {
+const Feed = ({ data }) => {
   // Filtering div related states and it's handleing (open / close)
   const [openFilter, setOpenFilter] = useState(false);
   const handleFilter = () => {
     openFilter === true ? setOpenFilter(false) : setOpenFilter(true);
   };
   //-------------------------------------------------------
-  const navigate = useNavigate();
-  const baseURL = "http://localhost:5000";
   const user = JSON.parse(localStorage.getItem("user"));
-  const { data, isPending } = useFetch(`${baseURL}/api/questions`);
-
-  useEffect(() => {}, [user]);
-  if (isPending) {
-    return <Spinner />;
-  }
-
   return (
     <Box flex={4} padding={2}>
       <Box

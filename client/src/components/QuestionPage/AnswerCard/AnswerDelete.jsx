@@ -7,7 +7,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const QuestionDelete = ({ answer }) => {
-  const { error, setError } = useContext(QuestionContext);
+  const { error, setError, answerForceUpdate } = useContext(QuestionContext);
   const user = JSON.parse(localStorage.getItem("user"));
   const params = useParams();
   const questionID = params.id;
@@ -25,6 +25,7 @@ const QuestionDelete = ({ answer }) => {
         toast.success(response.data.message);
         setError(null);
         navigate(`/question/${questionID}`);
+        answerForceUpdate();
       })
       .catch((err) => {
         console.log(err);

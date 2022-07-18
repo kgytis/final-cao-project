@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const AnswerForm = () => {
+const AnswerForm = ({ answerForceUpdate }) => {
   // Setup'ing const ---------------------------------------
   const [error, setError] = useState(null);
   const user = JSON.parse(localStorage.getItem("user"));
@@ -30,6 +30,8 @@ const AnswerForm = () => {
         toast.success(response.data.message);
         setError(null);
         navigate(`/question/${questionID}`);
+        answerForceUpdate();
+        e.target.elements.answerText.value = null;
       })
       .catch((err) => {
         console.log(err);

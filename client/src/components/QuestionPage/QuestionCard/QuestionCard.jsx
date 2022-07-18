@@ -2,11 +2,11 @@ import PostHeader from "./PostHeader";
 import { Card } from "@mui/material";
 import QuestionFeed from "./QuestionFeed";
 import QuestionValuation from "./QuestionValuation";
-const QuestionCard = () => {
+const QuestionCard = ({ questionForceUpdate }) => {
   return (
     <>
       <Card sx={{ margin: 5 }}>
-        <PostHeader />
+        <PostHeader questionForceUpdate={questionForceUpdate} />
         <QuestionFeed />
         <QuestionValuation />
       </Card>

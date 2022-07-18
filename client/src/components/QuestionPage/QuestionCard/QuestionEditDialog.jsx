@@ -11,10 +11,11 @@ import {
 } from "@mui/material";
 import { UserBox } from "../../styledComponents/AddUserBoxStyled";
 import { QuestionContext } from "../../../pages/Question";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { useEffect } from "react";
 
 const QuestionEditDialog = ({ ...props }) => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -23,13 +24,26 @@ const QuestionEditDialog = ({ ...props }) => {
   const navigate = useNavigate();
   const baseURL = "http://localhost:5000";
   // Dialog open/close functions------------------------------------
-  const { open, setOpen } = props;
+  const { open, setOpen, questionForceUpdate } = props;
   const handleClose = () => {
     setOpen(false);
   };
   // --------------------------------------------------------
-  const { setError, error } = useContext(QuestionContext);
+  const { setError, error, question } = useContext(QuestionContext);
   // Question update'ing ------------------------------------
+  const [formData, setFormData] = useState({
+    title: "",
+    questionText: "",
+  });
+  useEffect(() => {
+    setFormData({
+      title: question[0].title,
+      questionText: question[0].question_text,
+    });
+  }, [question]);
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
   const onSubmit = (e) => {
     e.preventDefault();
     axios
@@ -48,6 +62,7 @@ const QuestionEditDialog = ({ ...props }) => {
       .then((response) => {
         toast.success(response.data.message);
         navigate(`/question/${questionID}`);
+        questionForceUpdate();
       })
       .catch((err) => {
         console.log(err);
@@ -75,7 +90,7 @@ const QuestionEditDialog = ({ ...props }) => {
             <Typography variant="h6">{user.username}</Typography>
           </UserBox>
           <DialogContentText mt={2}>
-            Here you can aedit your question as You desire
+            Here you can edit your question as You desire
           </DialogContentText>
           <TextField
             sx={{ width: "100%" }}
@@ -85,10 +100,12 @@ const QuestionEditDialog = ({ ...props }) => {
             placeholder="Enter Question title"
             variant="standard"
             name="title"
+            value={formData.title}
+            onChange={handleChange}
           />
           <TextField
             sx={{ width: "100%" }}
-            id="description"
+            id="questionText"
             name="questionText"
             label="Description"
             type="text"
@@ -96,6 +113,8 @@ const QuestionEditDialog = ({ ...props }) => {
             variant="standard"
             multiline
             rows={8}
+            value={formData.questionText}
+            onChange={handleChange}
           />
         </DialogContent>
         <DialogActions>

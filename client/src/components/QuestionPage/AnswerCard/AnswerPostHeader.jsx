@@ -10,7 +10,7 @@ const AnswerPostHeader = ({ answer }) => {
             {answer.username.slice(0, 1).toUpperCase()}
           </Avatar>
         }
-        action={<AnswerEdit />}
+        action={<AnswerEdit answer={answer} />}
         title={answer.username}
         subheader={answer.timestamp.slice(0, 10)}
       />
