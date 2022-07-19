@@ -14,7 +14,7 @@ const allAnswers = async (req, res, next) => {
     FROM answers
     LEFT JOIN answerEval ON answerEval.answer_id = answers.id
     LEFT JOIN users ON users.id = answers.user_id
-    WHERE answers.question_id = ?
+    WHERE answers.question_id = ? AND answers.archived = false
     GROUP BY answers.id
     `;
     const [data] = await con.query(sql, questionID);
@@ -68,8 +68,6 @@ const updateAnswer = async (req, res, next) => {
     const answerId = req.params.id;
     const timestamp = new Date().toLocaleDateString("LT");
     const answerText = req.body.answerText;
-    console.log(`User ID ` + userID);
-    console.log(`Answer ID ` + answerId);
     const con = await mysql.createConnection(mysqlConfig);
     let sql = ``;
     let data = ``;
@@ -87,8 +85,6 @@ const updateAnswer = async (req, res, next) => {
       );
     }
     await con.end();
-    console.log(data);
-    console.log(req.body);
     if (data.affectedRows === 0) {
       await res.status(400);
       throw new Error("Invalid user for this type of action.");
@@ -109,7 +105,8 @@ const deleteAnswer = async (req, res, next) => {
     const answerId = req.params.id;
     const con = await mysql.createConnection(mysqlConfig);
     const sql = `
-    DELETE FROM answers
+    UPDATE answers 
+    SET archived = true
     WHERE id = ? AND user_id = ?
     `;
     const [data] = await con.query(sql, [answerId, userID]);
