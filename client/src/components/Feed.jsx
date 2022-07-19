@@ -36,7 +36,6 @@ const Feed = ({ data, newestSort, setNewestSort, setFilter, filter }) => {
 
   //-------------------------------------------------------
   const user = JSON.parse(localStorage.getItem("user"));
-  console.log(data);
   return (
     <>
       {data && (

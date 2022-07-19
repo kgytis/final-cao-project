@@ -10,7 +10,7 @@ const QuestionFeed = () => {
         <Typography variant="h5">{question[0].title}</Typography>
         {question[0].edit_timestamp && (
           <Typography variant="p" sx={{ fontSize: "14px" }} color="green">
-            Last edited : {question[0].edit_timestamp}
+            Last edited : {question[0].edit_timestamp.slice(0, 10)}
           </Typography>
         )}
         <Typography variant="h6" color="text.secondary" mt="15px">
