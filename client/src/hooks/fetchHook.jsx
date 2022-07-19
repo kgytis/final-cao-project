@@ -3,22 +3,21 @@ import { useEffect, useState, useReducer } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
-const useFetch = (URL) => {
+const useFetch = (URL, sortAtribute) => {
   const [data, setData] = useState(null);
   const [isPending, setIsPending] = useState(true);
   const [error, setError] = useState(null);
   const [reducerValue, forceUpdate] = useReducer((x) => x + 1, 0);
   useEffect(() => {
     axios
-      .get(URL)
+      .get(URL, { params: { sort: sortAtribute } })
       .then((response) => {
         return response.data;
       })
       .then((fetchData) => {
-        setData(fetchData);
         setIsPending(false);
         setError(null);
-        console.log(`Reducer value is-` + reducerValue);
+        setData(fetchData);
       })
       .catch((err) => {
         console.log(err);
@@ -30,7 +29,7 @@ const useFetch = (URL) => {
         setError(message);
         toast.error(error);
       });
-  }, [URL, reducerValue]);
+  }, [URL, reducerValue, sortAtribute]);
   return {
     data,
     isPending,
