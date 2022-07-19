@@ -12,6 +12,12 @@ const AnswerForm = ({ answerForceUpdate }) => {
   const questionID = params.id;
   const navigate = useNavigate();
   const baseURL = "http://localhost:5000";
+
+  const onClickError = async (e) => {
+    toast.error("To submit answer, please sign in.");
+    navigate("/login");
+  };
+
   const postAnswer = (e) => {
     e.preventDefault();
     axios
@@ -44,27 +50,41 @@ const AnswerForm = ({ answerForceUpdate }) => {
       });
   };
   return (
-    <form style={{ margin: "0 3rem" }} onSubmit={(e) => postAnswer(e)}>
-      <TextField
-        sx={{ width: "100%" }}
-        id="answerText"
-        name="answerText"
-        label="Answer Text"
-        type="text"
-        placeholder="What would you like to ask?"
-        variant="standard"
-        multiline
-        rows={8}
-      />
-      <Button
-        type="submit"
-        variant="outlined"
-        color="primary"
-        style={{ marginTop: "30px" }}
-      >
-        Post
-      </Button>
-    </form>
+    <>
+      <form style={{ marginTop: "30px" }} onSubmit={(e) => postAnswer(e)}>
+        <TextField
+          sx={{ width: "100%" }}
+          id="answerText"
+          name="answerText"
+          label="Answer Text"
+          type="text"
+          placeholder="What would you like to ask?"
+          variant="standard"
+          multiline
+          rows={8}
+        />
+        {user && (
+          <Button
+            type="submit"
+            variant="outlined"
+            color="primary"
+            style={{ marginTop: "20px" }}
+          >
+            Post
+          </Button>
+        )}
+        {!user && (
+          <Button
+            variant="outlined"
+            color="primary"
+            style={{ marginTop: "20px" }}
+            onClick={onClickError}
+          >
+            Post
+          </Button>
+        )}
+      </form>
+    </>
   );
 };
 
