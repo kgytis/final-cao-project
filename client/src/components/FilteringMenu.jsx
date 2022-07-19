@@ -15,7 +15,6 @@ import {
 
 const FilteringMenu = ({ ...props }) => {
   const { display } = props;
-  console.log(display);
   return (
     <>
       {display && (
