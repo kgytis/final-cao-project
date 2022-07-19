@@ -7,8 +7,13 @@ const QuestionFeed = () => {
   return (
     <>
       <CardContent>
-        <Typography variant="h6">{question[0].title}</Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="h5">{question[0].title}</Typography>
+        {question[0].edit_timestamp && (
+          <Typography variant="p" sx={{ fontSize: "14px" }} color="green">
+            Last edited : {question[0].edit_timestamp}
+          </Typography>
+        )}
+        <Typography variant="h6" color="text.secondary" mt="15px">
           {question[0].question_text}
         </Typography>
       </CardContent>

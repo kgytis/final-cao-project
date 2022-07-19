@@ -2,7 +2,7 @@ import { useState, createContext } from "react";
 import { useParams } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import useFetch from "../hooks/fetchHook";
-import { Box, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import QuestionCard from "../components/QuestionPage/QuestionCard/QuestionCard";
 import AnswerCard from "../components/QuestionPage/AnswerCard/AnswerCard";
 import AnswerForm from "../components/QuestionPage/AnswerForm";
@@ -54,7 +54,7 @@ const Question = ({ mode, setMode }) => {
       >
         {(questionPending || answerPending) && <Spinner />}
         {question && answers && (
-          <>
+          <Container>
             <QuestionCard questionForceUpdate={questionForceUpdate} />
 
             {answers.message && (
@@ -68,18 +68,13 @@ const Question = ({ mode, setMode }) => {
               <>
                 {answers.map((answer, index) => {
                   return (
-                    <>
-                      <AnswerCard
-                        answer={answer}
-                        key={`answer-card-${index}`}
-                      />
-                    </>
+                    <AnswerCard answer={answer} key={`answer-card-${index}`} />
                   );
                 })}
               </>
             )}
             <AnswerForm answerForceUpdate={answerForceUpdate} />
-          </>
+          </Container>
         )}
       </QuestionContext.Provider>
     </Box>

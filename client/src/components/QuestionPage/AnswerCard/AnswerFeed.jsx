@@ -4,8 +4,13 @@ const QuestionFeed = ({ answer }) => {
   return (
     <>
       <CardContent>
-        <Typography variant="h6">{answer.title}</Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="h5">{answer.title}</Typography>
+        {answer.edit_timestamp && (
+          <Typography variant="p" sx={{ fontSize: "14px" }} color="green">
+            Last edited : {answer.edit_timestamp}
+          </Typography>
+        )}
+        <Typography variant="h6" color="text.secondary" mt="15px">
           {answer.answer_text}
         </Typography>
       </CardContent>
