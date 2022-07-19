@@ -20,9 +20,8 @@ import { toast } from "react-toastify";
 
 import Spinner from "../components/Spinner";
 import axios from "axios";
-import { useReducer } from "react";
 
-const Add = ({ setFetchedData, fetchedData, forceUpdate }) => {
+const Add = ({ forceUpdate }) => {
   // Dialog box related states -----------------------------
   const [open, setOpen] = useState(false);
   const handleClickOpen = () => {
@@ -86,10 +85,11 @@ const Add = ({ setFetchedData, fetchedData, forceUpdate }) => {
             position: "fixed",
             bottom: 20,
             left: { xs: "calc(50% - 25px)", md: 30 },
+            display: "none",
           }}
           onClick={handleClickOpen}
         >
-          <Fab disabled>
+          <Fab>
             <AddIcon disabled />
           </Fab>
         </Tooltip>
@@ -126,8 +126,8 @@ const Add = ({ setFetchedData, fetchedData, forceUpdate }) => {
                   <Typography variant="h6">{user.username}</Typography>
                 </UserBox>
                 <DialogContentText mt={2}>
-                  To subscribe to this website, please enter your email address
-                  here. We will send updates occasionally.
+                  Here you can type in your question. Please provide questions
+                  title and whole question in respective fields.
                 </DialogContentText>
                 <TextField
                   sx={{ width: "100%" }}

@@ -42,12 +42,13 @@ const Question = ({ mode, setMode }) => {
           question,
           questionPending,
           questionError,
+          questionForceUpdate,
           answers,
           answerPending,
           answerError,
+          answerForceUpdate,
           error,
           setError,
-          answerForceUpdate,
         }}
       >
         {(questionPending || answerPending) && <Spinner />}

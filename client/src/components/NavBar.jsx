@@ -2,7 +2,6 @@
 import {
   AppBar,
   Typography,
-  InputBase,
   Avatar,
   Box,
   IconButton,
@@ -19,14 +18,8 @@ import * as React from "react";
 import { useNavigate } from "react-router-dom";
 // -----------------------------------------------------------
 // Styled components imports
-import {
-  StyledToolbar,
-  Search,
-  Icons,
-  UserBox,
-} from "./styledComponents/NavBarStyled";
+import { StyledToolbar, Icons, UserBox } from "./styledComponents/NavBarStyled";
 import StyledDrawer from "./styledComponents/StyledDrawer";
-import { useEffect } from "react";
 
 // -----------------------------------------------------------
 
@@ -86,10 +79,6 @@ const NavBar = ({ ...props }) => {
             onClick={() => navigate("/")}
           />
         </Box>
-        <Search sx={{ display: { xs: "none", md: "block" } }}>
-          <InputBase placeholder="Search..." />
-          {/* Add Autocomplete from MUI. Leis autocomplete'int paieska is jau turimu klausimu, gal visai nieko */}
-        </Search>
         <Stack direction="row" spacing={2}>
           {user && (
             <>

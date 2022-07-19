@@ -76,55 +76,62 @@ const QuestionEditDialog = ({ ...props }) => {
   };
   // --------------------------------------------------------
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      bgcolor={"background.default"}
-      color={"text.primary"}
-    >
-      <DialogTitle>Edit question</DialogTitle>
-      <form onSubmit={onSubmit}>
-        <DialogContent>
-          <UserBox>
-            <Avatar sx={{ width: 30, height: 30 }} alt={`${user.username}`} />
-            <Typography variant="h6">{user.username}</Typography>
-          </UserBox>
-          <DialogContentText mt={2}>
-            Here you can edit your question as You desire
-          </DialogContentText>
-          <TextField
-            sx={{ width: "100%" }}
-            id="title"
-            label="Question title"
-            type="text"
-            placeholder="Enter Question title"
-            variant="standard"
-            name="title"
-            value={formData.title}
-            onChange={handleChange}
-          />
-          <TextField
-            sx={{ width: "100%" }}
-            id="questionText"
-            name="questionText"
-            label="Description"
-            type="text"
-            placeholder="What would you like to ask?"
-            variant="standard"
-            multiline
-            rows={8}
-            value={formData.questionText}
-            onChange={handleChange}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose} type="submit">
-            Edit
-          </Button>
-        </DialogActions>
-      </form>
-    </Dialog>
+    <>
+      {user && (
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          bgcolor={"background.default"}
+          color={"text.primary"}
+        >
+          <DialogTitle>Edit question</DialogTitle>
+          <form onSubmit={onSubmit}>
+            <DialogContent>
+              <UserBox>
+                <Avatar
+                  sx={{ width: 30, height: 30 }}
+                  alt={`${user.username}`}
+                />
+                <Typography variant="h6">{user.username}</Typography>
+              </UserBox>
+              <DialogContentText mt={2}>
+                Here you can edit your question as You desire
+              </DialogContentText>
+              <TextField
+                sx={{ width: "100%" }}
+                id="title"
+                label="Question title"
+                type="text"
+                placeholder="Enter Question title"
+                variant="standard"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+              />
+              <TextField
+                sx={{ width: "100%" }}
+                id="questionText"
+                name="questionText"
+                label="Description"
+                type="text"
+                placeholder="What would you like to ask?"
+                variant="standard"
+                multiline
+                rows={8}
+                value={formData.questionText}
+                onChange={handleChange}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>Cancel</Button>
+              <Button onClick={handleClose} type="submit">
+                Edit
+              </Button>
+            </DialogActions>
+          </form>
+        </Dialog>
+      )}
+    </>
   );
 };
 

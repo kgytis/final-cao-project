@@ -69,43 +69,50 @@ const QuestionEditDialog = ({ ...props }) => {
   };
   // --------------------------------------------------------
   return (
-    <Dialog
-      open={open}
-      onClose={handleClose}
-      bgcolor={"background.default"}
-      color={"text.primary"}
-    >
-      <DialogTitle>Edit Answer</DialogTitle>
-      <form onSubmit={onSubmit}>
-        <DialogContent>
-          <UserBox>
-            <Avatar sx={{ width: 30, height: 30 }} alt={`${user.username}`} />
-            <Typography variant="h6">{user.username}</Typography>
-          </UserBox>
-          <DialogContentText mt={2}>
-            Here you can edit your answer as You desire.
-          </DialogContentText>
-          <TextField
-            sx={{ width: "100%" }}
-            id="answerText"
-            name="answerText"
-            label="Update answer"
-            type="text"
-            placeholder="Update your answer!"
-            variant="standard"
-            multiline
-            rows={8}
-            onChange={handleChange}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleClose} type="submit">
-            Edit
-          </Button>
-        </DialogActions>
-      </form>
-    </Dialog>
+    <>
+      {user && (
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          bgcolor={"background.default"}
+          color={"text.primary"}
+        >
+          <DialogTitle>Edit Answer</DialogTitle>
+          <form onSubmit={onSubmit}>
+            <DialogContent>
+              <UserBox>
+                <Avatar
+                  sx={{ width: 30, height: 30 }}
+                  alt={`${user.username}`}
+                />
+                <Typography variant="h6">{user.username}</Typography>
+              </UserBox>
+              <DialogContentText mt={2}>
+                Here you can edit your answer as You desire.
+              </DialogContentText>
+              <TextField
+                sx={{ width: "100%" }}
+                id="answerText"
+                name="answerText"
+                label="Update answer"
+                type="text"
+                placeholder="Update your answer!"
+                variant="standard"
+                multiline
+                rows={8}
+                onChange={handleChange}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>Cancel</Button>
+              <Button onClick={handleClose} type="submit">
+                Edit
+              </Button>
+            </DialogActions>
+          </form>
+        </Dialog>
+      )}
+    </>
   );
 };
 
