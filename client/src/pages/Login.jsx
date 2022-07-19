@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { AccountCircle, RemoveRedEye } from "@mui/icons-material";
 import LoginIcon from "@mui/icons-material/Login";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -19,10 +19,8 @@ import Spinner from "../components/Spinner";
 
 const Login = ({ mode, setMode }) => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
   const [isPending, setIsPending] = useState(null);
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -36,10 +34,8 @@ const Login = ({ mode, setMode }) => {
         return response.data;
       })
       .then((receivedResponse) => {
-        setUser(receivedResponse);
         setIsPending(false);
         setError(null);
-        setSuccess(true);
         navigate("/");
       })
       .catch((err) => {

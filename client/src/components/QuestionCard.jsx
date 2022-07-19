@@ -1,4 +1,4 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import {
   Card,
   CardHeader,
@@ -9,7 +9,7 @@ import {
   CardActions,
   Stack,
 } from "@mui/material";
-import { MoreVert, ReadMore } from "@mui/icons-material";
+import { ReadMore } from "@mui/icons-material";
 import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 

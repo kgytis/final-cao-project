@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { UserBox } from "../../styledComponents/AddUserBoxStyled";
 import { QuestionContext } from "../../../pages/Question";
-import { useContext, useState, useEffect } from "react";
+import { useContext, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -23,7 +23,7 @@ const QuestionEditDialog = ({ ...props }) => {
   const navigate = useNavigate();
   const baseURL = "http://localhost:5000";
   // Dialog open/close functions------------------------------------
-  const { open, setOpen, answerData, modifyingAnswerID } = props;
+  const { open, setOpen, modifyingAnswerID } = props;
 
   const [formData, setFormData] = useState({
     answerText: "",

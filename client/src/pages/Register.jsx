@@ -24,10 +24,8 @@ import Spinner from "../components/Spinner";
 import axios from "axios";
 
 const Register = ({ mode, setMode }) => {
-  const [user, setUser] = useState(null);
   const [isPending, setIsPending] = useState(null);
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
 
   const navigate = useNavigate();
 
@@ -50,10 +48,8 @@ const Register = ({ mode, setMode }) => {
           return response.data;
         })
         .then((receivedResponse) => {
-          setUser(receivedResponse);
           setIsPending(false);
           setError(null);
-          setSuccess(true);
           navigate("/");
         })
         .catch((err) => {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 
 import { Box, createTheme, ThemeProvider } from "@mui/material";

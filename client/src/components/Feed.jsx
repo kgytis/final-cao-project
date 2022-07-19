@@ -2,7 +2,6 @@
 import { ButtonGroup, Typography, Button, Box } from "@mui/material";
 import FilterListIcon from "@mui/icons-material/FilterList";
 // Component import
-import DropDownMenu from "./DropDownMenu";
 import QuestionCard from "./QuestionCard";
 import FilteringMenu from "./FilteringMenu";
 //React + Redux imports
@@ -11,7 +10,7 @@ import { useState, createContext } from "react";
 export const QuestionContext = createContext();
 
 const Feed = ({ data, newestSort, setNewestSort, setFilter, filter }) => {
-  // Filtering div related states and it's handleing (open / close)
+  // Filtering div related states and it's handling (open / close)
   const [openFilter, setOpenFilter] = useState(false);
   const handleFilter = () => {
     openFilter === true ? setOpenFilter(false) : setOpenFilter(true);
