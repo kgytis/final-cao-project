@@ -10,10 +10,11 @@ const allQuestions = async (req, res, next) => {
     const { sort } = req.query;
     const con = await mysql.createConnection(mysqlConfig);
     let sql = `
-    SELECT questions.*, users.email, users.username, COUNT(CASE WHEN questionEval.like THEN 1 END) AS likeCount, COUNT(CASE WHEN questionEval.dislike THEN 1 END) AS dislikeCount
+    SELECT questions.*, users.email, users.username, COUNT(CASE WHEN questionEval.likeEval THEN 1 END) AS likeCount, COUNT(CASE WHEN questionEval.dislikeEval THEN 1 END) AS dislikeCount,  COUNT(answers.id) as answerCount
     FROM questions
     LEFT JOIN questionEval ON questionEval.question_id = questions.id
     LEFT JOIN users ON users.id = questions.user_id
+    LEFT JOIN answers ON answers.question_id = questions.id
     WHERE questions.archived = false
     GROUP BY questions.id
     `;
@@ -28,6 +29,12 @@ const allQuestions = async (req, res, next) => {
     }
     if (sort === "activeDesc") {
       sql += `ORDER BY questions.active DESC`;
+    }
+    if (sort === "answeredAsc") {
+      sql += `ORDER BY answerCount ASC`;
+    }
+    if (sort === "answeredDesc") {
+      sql += `ORDER BY answerCount DESC`;
     }
     const [data] = await con.query(sql);
     await con.end();
@@ -45,7 +52,7 @@ const oneQuestion = async (req, res, next) => {
     const questionId = req.params.id;
     const con = await mysql.createConnection(mysqlConfig);
     const sql = `
-    SELECT questions.*, users.email, users.username, COUNT(CASE WHEN questionEval.like THEN 1 END) AS likeCount, COUNT(CASE WHEN questionEval.dislike THEN 1 END) AS dislikeCount
+    SELECT questions.*, users.email, users.username, COUNT(CASE WHEN questionEval.likeEval THEN 1 END) AS likeCount, COUNT(CASE WHEN questionEval.dislikeEval THEN 1 END) AS dislikeCount
     FROM questions
     LEFT JOIN questionEval ON questionEval.question_id = questions.id
     LEFT JOIN users ON users.id = questions.user_id
@@ -178,10 +185,38 @@ const deleteQuestion = async (req, res, next) => {
   }
 };
 
+// @desc Posts new evaluation
+// @route POST /api/questions/:id/evaluation
+// @access Private
+const newEvaluation = async (req, res, next) => {
+  try {
+    const questionId = req.params.id;
+    const userID = req.user[0].id; // extracted from JWT
+    const { evaluation } = req.body;
+    const con = await mysql.createConnection(mysqlConfig);
+    const sql = `
+    INSERT INTO questionEval (likeEval, dislikeEval, question_id)
+    VALUES (?, ?, ?)
+    `;
+    if (!evaluation) {
+    } else if (evaluation === "like") {
+      await con.query(sql, [true, false, questionId]);
+      res.status(200).json({ message: "Thanks for evaluation!" });
+    } else if (evaluation === "dislike") {
+      await con.query(sql, [false, true, questionId]);
+      res.status(200).json({ message: "Thanks for evaluation!" });
+    }
+    await con.end();
+  } catch (err) {
+    next(err);
+  }
+};
+
 export {
   allQuestions,
   oneQuestion,
   newQuestion,
   updateQuestion,
   deleteQuestion,
+  newEvaluation,
 };
