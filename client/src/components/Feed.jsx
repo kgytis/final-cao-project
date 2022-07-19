@@ -10,12 +10,25 @@ import { useState, createContext } from "react";
 
 export const QuestionContext = createContext();
 
-const Feed = ({ data }) => {
+const Feed = ({ data, newestSort, setNewestSort }) => {
   // Filtering div related states and it's handleing (open / close)
   const [openFilter, setOpenFilter] = useState(false);
   const handleFilter = () => {
     openFilter === true ? setOpenFilter(false) : setOpenFilter(true);
   };
+
+  const sortNewest = (e) => {
+    newestSort === "newestDesc"
+      ? setNewestSort("newestAsc")
+      : setNewestSort("newestDesc");
+  };
+
+  const sortActive = (e) => {
+    newestSort === "activeDesc"
+      ? setNewestSort("activeAsc")
+      : setNewestSort("activeDesc");
+  };
+
   //-------------------------------------------------------
   const user = JSON.parse(localStorage.getItem("user"));
   return (
@@ -34,15 +47,27 @@ const Feed = ({ data }) => {
           }}
         >
           <Typography variant="h6" sx={{ margin: 5 }}>
-            70 questions
+            {data.length} questions
           </Typography>
           <ButtonGroup variant="outlined">
-            <Button>Newest</Button>
-            <Button>Active</Button>
-            <Button sx={{ display: { xs: "none", xl: "block" } }}>
+            <Button onClick={sortNewest} id="newestDesc">
+              Newest
+            </Button>
+            <Button id="activeSort" onClick={sortActive}>
+              Active
+            </Button>
+            <Button
+              sx={{ display: { xs: "none", xl: "block" } }}
+              id="unansweredSort"
+            >
               Unanswered
             </Button>
-            <Button sx={{ display: { xs: "none", xl: "block" } }}>Score</Button>
+            <Button
+              sx={{ display: { xs: "none", xl: "block" } }}
+              id="scoreSort"
+            >
+              Score
+            </Button>
             <DropDownMenu />
           </ButtonGroup>
         </Box>
