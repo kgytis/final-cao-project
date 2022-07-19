@@ -7,7 +7,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const QuestionDelete = () => {
-  const { error, setError } = useContext(QuestionContext);
+  const { error, setError, question } = useContext(QuestionContext);
   const user = JSON.parse(localStorage.getItem("user"));
   const params = useParams();
   const questionID = params.id;
@@ -38,9 +38,28 @@ const QuestionDelete = () => {
   };
   // --------------------------------------------------------
   return (
-    <Button variant="contained" color="error" onClick={(e) => onDelete(e)}>
-      Delete
-    </Button>
+    <>
+      {!user && (
+        <Button disabled variant="contained">
+          Delete
+        </Button>
+      )}
+      {user && question[0].user_id !== user._id && (
+        <Button
+          disabled
+          variant="contained"
+          color="error"
+          onClick={(e) => onDelete(e)}
+        >
+          Delete
+        </Button>
+      )}
+      {user && question[0].user_id === user._id && (
+        <Button variant="contained" color="error" onClick={(e) => onDelete(e)}>
+          Delete
+        </Button>
+      )}
+    </>
   );
 };
 

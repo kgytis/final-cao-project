@@ -39,13 +39,27 @@ const QuestionDelete = ({ answer }) => {
   };
   // --------------------------------------------------------
   return (
-    <Button
-      variant="contained"
-      color="error"
-      onClick={() => onDeleteAnswer(answer.id)}
-    >
-      Delete
-    </Button>
+    <>
+      {!user && (
+        <Button disabled variant="contained">
+          Delete
+        </Button>
+      )}
+      {user && answer.user_id !== user._id && (
+        <Button disabled variant="contained" color="error">
+          Delete
+        </Button>
+      )}
+      {user && answer.user_id === user._id && (
+        <Button
+          variant="contained"
+          color="error"
+          onClick={() => onDeleteAnswer(answer.id)}
+        >
+          Delete
+        </Button>
+      )}
+    </>
   );
 };
 
