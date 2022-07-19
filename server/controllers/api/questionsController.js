@@ -7,12 +7,28 @@ import { v4 as uuid } from "uuid";
 // @access Public
 const allQuestions = async (req, res, next) => {
   try {
+    const { sort } = req.query;
     const con = await mysql.createConnection(mysqlConfig);
-    const sql = `
-    SELECT questions.*, users.email, users.username FROM questions
-    INNER JOIN users ON questions.user_id = users.id
+    let sql = `
+    SELECT questions.*, users.email, users.username, COUNT(CASE WHEN questionEval.like THEN 1 END) AS likeCount, COUNT(CASE WHEN questionEval.dislike THEN 1 END) AS dislikeCount
+    FROM questions
+    LEFT JOIN questionEval ON questionEval.question_id = questions.id
+    LEFT JOIN users ON users.id = questions.user_id
     WHERE questions.archived = false
+    GROUP BY questions.id
     `;
+    if (sort === "newestDesc") {
+      sql += `ORDER BY questions.timestamp DESC`;
+    }
+    if (sort === "newestAsc") {
+      sql += `ORDER BY questions.timestamp ASC`;
+    }
+    if (sort === "activeAsc") {
+      sql += `ORDER BY questions.active ASC`;
+    }
+    if (sort === "activeDesc") {
+      sql += `ORDER BY questions.active DESC`;
+    }
     const [data] = await con.query(sql);
     await con.end();
     res.status(200).json(data);
@@ -29,13 +45,14 @@ const oneQuestion = async (req, res, next) => {
     const questionId = req.params.id;
     const con = await mysql.createConnection(mysqlConfig);
     const sql = `
-    SELECT questions.*, users.username, users.email
+    SELECT questions.*, users.email, users.username, COUNT(CASE WHEN questionEval.like THEN 1 END) AS likeCount, COUNT(CASE WHEN questionEval.dislike THEN 1 END) AS dislikeCount
     FROM questions
-    INNER JOIN users ON questions.user_id = users.id
+    LEFT JOIN questionEval ON questionEval.question_id = questions.id
+    LEFT JOIN users ON users.id = questions.user_id
     WHERE questions.archived = false AND questions.id = ?
+    GROUP BY questions.id
     `;
     const [data] = await con.query(sql, questionId);
-    console.log(data);
     await con.end();
     res.status(200).json(data);
   } catch (err) {

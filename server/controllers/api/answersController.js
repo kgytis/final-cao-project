@@ -10,10 +10,12 @@ const allAnswers = async (req, res, next) => {
     const questionID = req.params.id;
     const con = await mysql.createConnection(mysqlConfig);
     const sql = `
-    
-    SELECT answers.*, users.email, users.username FROM answers
-    INNER JOIN users ON answers.user_id = users.id
-    WHERE question_id =?
+    SELECT answers.*, users.email, users.username, COUNT(CASE WHEN answerEval.like THEN 1 END) AS likeCount, COUNT(CASE WHEN answerEval.dislike THEN 1 END) AS dislikeCount
+FROM answers
+LEFT JOIN answerEval ON answerEval.answer_id = answers.id
+LEFT JOIN users ON users.id = answers.user_id
+WHERE answers.question_id = 1
+GROUP BY answers.id
     `;
     const [data] = await con.query(sql, questionID);
     await con.end();

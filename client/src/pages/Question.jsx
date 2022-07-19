@@ -1,5 +1,5 @@
-import { useState, useEffect, createContext } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState, createContext } from "react";
+import { useParams } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import useFetch from "../hooks/fetchHook";
 
@@ -67,9 +67,9 @@ const Question = ({ mode, setMode }) => {
                     </>
                   );
                 })}
-                <AnswerForm answerForceUpdate={answerForceUpdate} />
               </>
             )}
+            <AnswerForm answerForceUpdate={answerForceUpdate} />
           </>
         )}
       </QuestionContext.Provider>

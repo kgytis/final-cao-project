@@ -9,6 +9,7 @@ import {
   CardActions,
   Radio,
   Button,
+  Stack,
 } from "@mui/material";
 import { MoreVert, ThumbDown, ThumbUp } from "@mui/icons-material";
 import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
@@ -25,7 +26,7 @@ const QuestionCard = ({ ...props }) => {
   const handleChange = (event) => {
     setSelectedValue(event.target.value);
   };
-
+  console.log(data);
   const controlProps = (item) => ({
     checked: selectedValue === item,
     onChange: handleChange,
@@ -70,25 +71,36 @@ const QuestionCard = ({ ...props }) => {
           {`${data.question_text.slice(0, 20)}...`}
         </Typography>
         <Link to={`/question/${question.id}`}> Read More</Link>
-        {/* <Button onClick={() => navigate(`/question/${data.id}`)}>
-          Read more
-        </Button> */}
       </CardContent>
-      <CardActions disableSpacing>
-        <IconButton aria-label="like" id="like-checkbox">
+      <CardActions
+        style={{
+          display: "flex",
+          width: "130px",
+          justifyContent: "space-around",
+        }}
+      >
+        <Stack direction="row" spacing={2} style={{ alignItems: "center" }}>
+          <ThumbUpOutlinedIcon />
+          <Typography variant="p">{data.likeCount}</Typography>
+        </Stack>
+        {/* <IconButton aria-label="like" id="like-checkbox">
           <Radio
             icon={<ThumbUpOutlinedIcon />}
             checkedIcon={<ThumbUp />}
             {...controlProps("a")}
           />
-        </IconButton>
-        <IconButton aria-label="dislike" id="dislike-checkbox">
+        </IconButton> */}
+        <Stack direction="row" spacing={2} style={{ alignItems: "center" }}>
+          <ThumbDownOutlinedIcon />
+          <Typography variant="p">{data.dislikeCount}</Typography>
+        </Stack>
+        {/* <IconButton aria-label="dislike" id="dislike-checkbox">
           <Radio
             icon={<ThumbDownOutlinedIcon />}
             checkedIcon={<ThumbDown />}
             {...controlProps("b")}
           />
-        </IconButton>
+        </IconButton> */}
       </CardActions>
     </Card>
   );

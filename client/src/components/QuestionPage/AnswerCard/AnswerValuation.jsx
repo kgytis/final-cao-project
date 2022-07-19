@@ -1,4 +1,4 @@
-import { IconButton, CardActions, Radio } from "@mui/material";
+import { IconButton, CardActions, Radio, Stack, Button } from "@mui/material";
 import { ThumbDown, ThumbUp } from "@mui/icons-material";
 import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
@@ -22,22 +22,34 @@ const AnswerValuation = ({ answer }) => {
       disableSpacing
       style={{ display: "flex", justifyContent: "space-between" }}
     >
-      <div>
-        <IconButton aria-label="like" id="like-checkbox">
-          <Radio
-            icon={<ThumbUpOutlinedIcon />}
-            checkedIcon={<ThumbUp />}
-            {...controlProps("a")}
-          />
-        </IconButton>
-        <IconButton aria-label="dislike" id="dislike-checkbox">
-          <Radio
-            icon={<ThumbDownOutlinedIcon />}
-            checkedIcon={<ThumbDown />}
-            {...controlProps("b")}
-          />
-        </IconButton>
-      </div>
+      <Stack direction="row" spacing={2}>
+        <Button
+          aria-label="like"
+          id="like-checkbox"
+          startIcon={
+            <Radio
+              icon={<ThumbUpOutlinedIcon />}
+              checkedIcon={<ThumbUp />}
+              {...controlProps("a")}
+            />
+          }
+        >
+          {answer.likeCount}
+        </Button>
+        <Button
+          aria-label="dislike"
+          id="dislike-checkbox"
+          startIcon={
+            <Radio
+              icon={<ThumbDownOutlinedIcon />}
+              checkedIcon={<ThumbDown />}
+              {...controlProps("b")}
+            />
+          }
+        >
+          {answer.dislikeCount}
+        </Button>
+      </Stack>
       <AnswerDelete answer={answer} />
     </CardActions>
   );
