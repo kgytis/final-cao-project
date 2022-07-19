@@ -16,7 +16,6 @@ import {
 } from "@mui/icons-material";
 import { useState } from "react";
 import NavBar from "../components/NavBar";
-
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -69,7 +68,7 @@ const Register = ({ mode, setMode }) => {
     return <Spinner />;
   }
   return (
-    <>
+    <Box>
       <NavBar setMode={setMode} mode={mode} />
 
       <Box
@@ -152,7 +151,7 @@ const Register = ({ mode, setMode }) => {
           </form>
         </Box>
       </Box>
-    </>
+    </Box>
   );
 };
 

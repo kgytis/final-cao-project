@@ -56,7 +56,7 @@ const Login = ({ mode, setMode }) => {
     navigate("/");
   }
   return (
-    <>
+    <Box>
       <NavBar setMode={setMode} mode={mode} />
       <Box
         display="flex"
@@ -112,7 +112,7 @@ const Login = ({ mode, setMode }) => {
           </form>
         </Box>
       </Box>
-    </>
+    </Box>
   );
 };
 

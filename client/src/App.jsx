@@ -6,6 +6,7 @@ import FrontPage from "./pages/FrontPage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Question from "./pages/Question";
+import Footer from "./components/Footer";
 
 function App() {
   const [mode, setMode] = useState("light");
@@ -16,7 +17,14 @@ function App() {
   });
   return (
     <ThemeProvider theme={darkTheme}>
-      <Box bgcolor={"background.default"} color={"text.primary"}>
+      <Box
+        bgcolor={"background.default"}
+        color={"text.primary"}
+        minHeight="100vh"
+        display="flex"
+        justifyContent="space-between"
+        flexDirection="column"
+      >
         <Routes>
           <Route
             path="/"
@@ -35,6 +43,7 @@ function App() {
             element={<Question mode={mode} setMode={setMode} />}
           />
         </Routes>
+        <Footer />
       </Box>
     </ThemeProvider>
   );

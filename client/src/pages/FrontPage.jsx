@@ -1,10 +1,9 @@
-import { Stack } from "@mui/material";
+import { Box, Container, Stack } from "@mui/material";
 import React from "react";
 import Add from "../components/Add";
 import Feed from "../components/Feed";
 import NavBar from "../components/NavBar";
-// import RightBar from "../components/RightBar";
-import Sidebar from "../components/Sidebar";
+
 import useFetch from "../hooks/fetchHook";
 import Spinner from "../components/Spinner";
 import { useState } from "react";
@@ -25,13 +24,13 @@ const FrontPage = ({ mode, setMode }) => {
     } else setFilteredData(data);
   }, [filter, data]);
   return (
-    <>
+    <Box>
       {isPending && <Spinner />}
       {filteredData && (
         <>
           <NavBar setMode={setMode} mode={mode} />
-          <Stack direction="row" spacing={2} justifyContent="space-between">
-            <Sidebar setMode={setMode} mode={mode} />
+
+          <Container style={{ minheight: "100vh" }}>
             <Feed
               data={filteredData}
               newestSort={newestSort}
@@ -39,11 +38,12 @@ const FrontPage = ({ mode, setMode }) => {
               setFilter={setFilter}
               filter={filter}
             />
-          </Stack>
+          </Container>
+
           <Add forceUpdate={forceUpdate} />
         </>
       )}
-    </>
+    </Box>
   );
 };
 

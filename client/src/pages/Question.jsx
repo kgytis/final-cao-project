@@ -2,11 +2,12 @@ import { useState, createContext } from "react";
 import { useParams } from "react-router-dom";
 import Spinner from "../components/Spinner";
 import useFetch from "../hooks/fetchHook";
-
+import { Box, Typography } from "@mui/material";
 import QuestionCard from "../components/QuestionPage/QuestionCard/QuestionCard";
 import AnswerCard from "../components/QuestionPage/AnswerCard/AnswerCard";
 import AnswerForm from "../components/QuestionPage/AnswerForm";
 import NavBar from "../components/NavBar";
+
 // Contexts
 const QuestionContext = createContext();
 
@@ -35,7 +36,7 @@ const Question = ({ mode, setMode }) => {
   // --------------------------------------------------------
   // --------------------------------------------------------
   return (
-    <>
+    <Box>
       <NavBar setMode={setMode} mode={mode} />
       <QuestionContext.Provider
         value={{
@@ -55,7 +56,14 @@ const Question = ({ mode, setMode }) => {
         {question && answers && (
           <>
             <QuestionCard questionForceUpdate={questionForceUpdate} />
-            {answers.message && <div>{answers.message}</div>}
+
+            {answers.message && (
+              <Box display="flex" justifyContent="center">
+                <Typography variant="h4" color="red">
+                  {answers.message}
+                </Typography>
+              </Box>
+            )}
             {!answers.message && (
               <>
                 {answers.map((answer, index) => {
@@ -74,7 +82,7 @@ const Question = ({ mode, setMode }) => {
           </>
         )}
       </QuestionContext.Provider>
-    </>
+    </Box>
   );
 };
 

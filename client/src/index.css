@@ -19,7 +19,11 @@
   border-radius: 50%;
   animation: spin 1.2s linear infinite;
 }
-
+html,
+body {
+  min-height: calc(100vh);
+  margin: 0;
+}
 @keyframes spin {
   0% {
     transform: rotate(0deg);
