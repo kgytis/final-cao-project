@@ -1,4 +1,4 @@
-import { Box, Container, Stack } from "@mui/material";
+import { Box, Container } from "@mui/material";
 import React from "react";
 import Add from "../components/Add";
 import Feed from "../components/Feed";
