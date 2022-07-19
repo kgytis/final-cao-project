@@ -10,12 +10,12 @@ const allAnswers = async (req, res, next) => {
     const questionID = req.params.id;
     const con = await mysql.createConnection(mysqlConfig);
     const sql = `
-    SELECT answers.*, users.email, users.username, COUNT(CASE WHEN answerEval.like THEN 1 END) AS likeCount, COUNT(CASE WHEN answerEval.dislike THEN 1 END) AS dislikeCount
-FROM answers
-LEFT JOIN answerEval ON answerEval.answer_id = answers.id
-LEFT JOIN users ON users.id = answers.user_id
-WHERE answers.question_id = 1
-GROUP BY answers.id
+    SELECT answers.*, users.email, users.username, COUNT(CASE WHEN answerEval.likeEval THEN 1 END) AS likeCount, COUNT(CASE WHEN answerEval.dislikeEval THEN 1 END) AS dislikeCount
+    FROM answers
+    LEFT JOIN answerEval ON answerEval.answer_id = answers.id
+    LEFT JOIN users ON users.id = answers.user_id
+    WHERE answers.question_id = ?
+    GROUP BY answers.id
     `;
     const [data] = await con.query(sql, questionID);
     await con.end();
@@ -125,4 +125,31 @@ const deleteAnswer = async (req, res, next) => {
   }
 };
 
-export { allAnswers, newAnswer, updateAnswer, deleteAnswer };
+// @desc Posts new evaluation
+// @route POST /api/answers/:id/evaluation
+// @access Private
+const newEvaluation = async (req, res, next) => {
+  try {
+    const answerId = req.params.id;
+    const userID = req.user[0].id; // extracted from JWT
+    const { evaluation } = req.body;
+    const con = await mysql.createConnection(mysqlConfig);
+    const sql = `
+    INSERT INTO answerEval (likeEval, dislikeEval, answer_id)
+    VALUES (?, ?, ?)
+    `;
+    if (!evaluation) {
+    } else if (evaluation === "like") {
+      await con.query(sql, [true, false, answerId]);
+      res.status(200).json({ message: "Thanks for evaluation!" });
+    } else if (evaluation === "dislike") {
+      await con.query(sql, [false, true, answerId]);
+      res.status(200).json({ message: "Thanks for evaluation!" });
+    }
+    await con.end();
+  } catch (err) {
+    next(err);
+  }
+};
+
+export { allAnswers, newAnswer, updateAnswer, deleteAnswer, newEvaluation };

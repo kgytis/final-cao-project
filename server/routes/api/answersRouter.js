@@ -6,6 +6,7 @@ import {
   newAnswer,
   updateAnswer,
   deleteAnswer,
+  newEvaluation,
 } from "../../controllers/api/answersController.js";
 // Middleware imports
 import protect from "../../middleware/authMiddleware.js";
@@ -17,5 +18,5 @@ answerRouter
 answerRouter
   .patch("/answers/:id", protect, updateAnswer)
   .delete("/answers/:id", protect, deleteAnswer);
-
+answerRouter.post("/answers/:id/evaluation", protect, newEvaluation);
 export default answerRouter;

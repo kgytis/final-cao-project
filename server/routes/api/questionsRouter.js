@@ -7,6 +7,7 @@ import {
   newQuestion,
   updateQuestion,
   deleteQuestion,
+  newEvaluation,
 } from "../../controllers/api/questionsController.js";
 
 // Middleware imports
@@ -21,5 +22,5 @@ questionsRouter
   .get("/questions/:id", oneQuestion)
   .patch("/questions/:id", protect, updateQuestion)
   .delete("/questions/:id", protect, deleteQuestion);
-
+questionsRouter.post("/questions/:id/evaluation", protect, newEvaluation);
 export default questionsRouter;
