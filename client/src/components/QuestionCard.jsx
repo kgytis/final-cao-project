@@ -36,12 +36,14 @@ const QuestionCard = ({ ...props }) => {
         }
         title={data.username}
         subheader={`Published on : ${data.timestamp.slice(0, 10)}`}
+        sx={{ paddingBottom: "0px" }}
       />
       <CardContent>
+        <Typography variant="h6">{data.title}</Typography>
         <Stack direction="row" spacing={2}>
           {data.edit_timestamp && (
             <Typography variant="p" sx={{ fontSize: "14px" }} color="green">
-              Last edited : {data.edit_timestamp}
+              Last edited : {data.edit_timestamp.slice(0, 10)}
             </Typography>
           )}
           {data.answerCount === 0 && (

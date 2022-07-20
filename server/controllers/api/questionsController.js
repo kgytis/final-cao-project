@@ -1,7 +1,7 @@
 import mysql from "mysql2/promise";
 import mysqlConfig from "../../dbConfig.js";
 import { v4 as uuid } from "uuid";
-
+import moment from "moment";
 // @desc Get all questions
 // @route GET /api/questions
 // @access Public
@@ -72,7 +72,7 @@ const oneQuestion = async (req, res, next) => {
 // @access Private
 const newQuestion = async (req, res, next) => {
   try {
-    const timestamp = new Date().toLocaleDateString("LT");
+    const timestamp = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
     const ID = uuid();
     const userID = req.user[0].id; // extracted from JWT
     const { title, description } = req.body;
@@ -104,7 +104,7 @@ const updateQuestion = async (req, res, next) => {
   try {
     const userID = req.user[0].id; // extracted from JWT
     const questionId = req.params.id;
-    const timestamp = new Date().toLocaleDateString("LT");
+    const timestamp = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
     const { title, questionText } = req.body;
     const con = await mysql.createConnection(mysqlConfig);
     let sql = ``;

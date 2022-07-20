@@ -104,7 +104,7 @@ const NavBar = ({ ...props }) => {
               </Button>
 
               <Button variant="contained" onClick={() => navigate("/register")}>
-                Sign in
+                Sign up
               </Button>
             </>
           )}

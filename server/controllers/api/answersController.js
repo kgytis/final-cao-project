@@ -1,7 +1,7 @@
 import mysql from "mysql2/promise";
 import mysqlConfig from "../../dbConfig.js";
 import { v4 as uuid } from "uuid";
-
+import moment from "moment";
 // @desc All answers of a question
 // @route POST /api/questions/:id/answers
 // @access Public
@@ -16,6 +16,7 @@ const allAnswers = async (req, res, next) => {
     LEFT JOIN users ON users.id = answers.user_id
     WHERE answers.question_id = ? AND answers.archived = false
     GROUP BY answers.id
+    ORDER BY answers.timestamp ASC
     `;
     const [data] = await con.query(sql, questionID);
     await con.end();
@@ -36,7 +37,7 @@ const allAnswers = async (req, res, next) => {
 // @access Private
 const newAnswer = async (req, res, next) => {
   try {
-    const timestamp = new Date().toLocaleDateString("LT");
+    const timestamp = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
     const ID = uuid();
     const userID = req.user[0].id; // extracted from JWT
     const { answerText } = req.body;
@@ -66,7 +67,7 @@ const updateAnswer = async (req, res, next) => {
   try {
     const userID = req.user[0].id; // extracted from JWT
     const answerId = req.params.id;
-    const timestamp = new Date().toLocaleDateString("LT");
+    const timestamp = moment(new Date()).format("YYYY-MM-DD HH:mm:ss");
     const answerText = req.body.answerText;
     const con = await mysql.createConnection(mysqlConfig);
     let sql = ``;

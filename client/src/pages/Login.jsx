@@ -39,7 +39,6 @@ const Login = ({ mode, setMode }) => {
         navigate("/");
       })
       .catch((err) => {
-        console.log(err);
         setIsPending(false);
         const message =
           (err.response && err.response.data && err.response.data.message) ||

@@ -14,7 +14,7 @@ const AnswerForm = ({ answerForceUpdate }) => {
   const baseURL = "http://localhost:5000";
 
   const onClickError = async (e) => {
-    toast.error("To submit answer, please sign in.");
+    toast.error("To submit answer, please log in or sign up.");
     navigate("/login");
   };
 
